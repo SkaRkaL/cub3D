@@ -253,5 +253,6 @@ int main(int ac, char **av)
 	if (is_map_valid == false)
 		return (ft_putstr_fd("Error\nInvalid Map", 2), 1);
 	return (0);
+	
 }
 

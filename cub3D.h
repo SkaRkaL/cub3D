@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include "gnl/gnl.h"
 
+
 typedef struct s_map
 {
 	int		x;

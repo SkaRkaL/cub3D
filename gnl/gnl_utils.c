@@ -28,6 +28,7 @@ char	*ft_strdup(char *s)
 	}
 	ptr[i] = '\0';
 	return (ptr);
+	
 }
 
 char	*ft_strjoin(char *save, char *buff)

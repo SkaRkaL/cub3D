@@ -1,5 +1,6 @@
 #include "cub3D.h"
 
+
 int	counter(char *s, char c)
 {
 	int	i;

@@ -73,6 +73,7 @@ char	*the_saver(char *save)
 	while (save[i])
 		str[c++] = save[i++];
 	str[c] = '\0';
+	
 	free(save);
 	return (str);
 }
