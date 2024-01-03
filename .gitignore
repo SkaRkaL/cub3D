@@ -1,7 +1,8 @@
-*.cub
 a.out
 *.o
 */*.o
 Ds_Store
 */.DS_Store
 cub3D
+test
+test.c

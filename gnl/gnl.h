@@ -12,7 +12,7 @@
 #  define BUFFER_SIZE 11
 # endif
 
-size_t	ft_strlen(char *s);
+int		ft_strlen(char *s);
 char	*ft_strdup(char *s1);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_search(char *str, int c);

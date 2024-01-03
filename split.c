@@ -1,6 +1,5 @@
 #include "cub3D.h"
 
-
 int	counter(char *s, char c)
 {
 	int	i;
@@ -52,7 +51,7 @@ char	**ft_split(char *str, char c)
 
 	if (!str)
 		return (NULL);
-	str_split = malloc(counter(str, c) + 1);
+	str_split = malloc((counter(str, c) + 1) * sizeof(char *));
 	if (!str_split)
 		return (0);
 	start = 0;
