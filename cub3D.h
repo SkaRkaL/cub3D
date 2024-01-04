@@ -31,18 +31,18 @@ typedef struct s_map
 	char *so;
 	char *we;
 	char *ea;
-	t_color f;
 	t_color c;
+	t_color f;
 } t_map;
 
 
-
+int check_line_is_empty(char *line);
 
 
 ////////////////////////    UTILS     ///////////////////////////
 char *ft_strdup(char *s1);
 int ft_strchr(char *s, int c);
-char *ft_substr(char *s, unsigned int start, int len);
+char *ft_substr(char const *s, unsigned int start, int len);
 char **ft_split(char *str, char c);
 
 #endif

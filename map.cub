@@ -2,7 +2,7 @@ NO  ./path_to_the_north_texture_NO
 WE  ./path_to_the_west_texture_WE
 SO  ./path_to_the_south_texture_SO
 EA  ./path_to_the_east_texture_EA
-
+    
 F 111,109,195
 C 128,198,165
 

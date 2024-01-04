@@ -5,9 +5,11 @@ int is_white_space(char c)
 	return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int get_first_position(char const *str)
+int get_first_position(char *str)
 {
 	int i = 0;
+	if (str == NULL)
+		return (0);
 	while (is_white_space(str[i]))
 	{
 		i += 1;
@@ -15,9 +17,11 @@ int get_first_position(char const *str)
 	return (i);
 }
 
-int get_str_len(char const *str)
+int get_str_len(char *str)
 {
 	int len = 0;
+	if (str == NULL)
+		return (0);
 	while (str[len] != '\0')
 	{
 		len += 1;
@@ -25,42 +29,48 @@ int get_str_len(char const *str)
 	return (len);
 }
 
-int get_last_position(char const *str)
+int get_last_position(char *str)
 {
-	int i = get_str_len(str) - 1;
-	while (is_white_space(str[i]))
+	if (str == NULL)
+		return (0);
+	int i = get_str_len(str);
+	printf("i = %d\n", i);
+	while (str[i] && is_white_space(str[i]))
 	{
 		i -= 1;
 	}
 	return (i);
 }
 
-int get_trim_len(char const *str)
+int get_trim_len(char *str)
 {
+	if (str == NULL)
+		return (0);
 	return (get_last_position(str) - get_first_position(str));
 }
 
-char *ft_strtrim(char const *str)
+char	*ft_strtrim(char const *s, char const *set)
 {
-	if (str == NULL)
-		return (NULL);
+	int		strt;
+	int		end;
+	char	*ptr;
 
-	char *trim = NULL;
-	int i, len, start, end;
-	i = 0;
-	len = get_trim_len(str);
-	trim = (char *)malloc(len + 1);
-	if (trim == NULL)
+	strt = 0;
+	if (s == NULL)
 		return (NULL);
-	start = get_first_position(str);
-	while (i <= len)
-	{
-		trim[i] = str[start];
-		i += 1;
-		start += 1;
-	}
-	trim[i] = '\0';
-	return (trim);
+	if (s[0] == '\0')
+		return (strdup(""));
+	if (set == NULL)
+		return (strdup(s));
+	while (strchr(set, s[strt]) && s[strt])
+		strt++;
+	end = strlen(s);
+	while (strchr(set, s[end]) && end != 0)
+		end--;
+	if (end < strt)
+		return (strdup(""));
+	ptr = ft_substr(s, strt, end - strt + 1);
+	return (ptr);
 }
 
 int ft_strlcpy(char *dst, char *src, int dstsize)
@@ -106,22 +116,22 @@ char *ft_strtok(char *str, char *sep)
 	return (ret);
 }
 
-char *ft_substr(char *s, unsigned int start, int len)
+char *ft_substr(char const *s, unsigned int start, int len)
 {
 	char *str;
 	int i;
 
 	if (!s)
 		return (NULL);
-	if (!len || start >= ft_strlen(s))
+	if (!len || start >= strlen(s))
 		return (ft_strdup(""));
-	i = ft_strlen(s) - start;
+	i = strlen(s) - start;
 	if (i > len)
 		i = len;
 	str = (char *)malloc(sizeof(char) * (i + 1));
 	if (!str)
 		return (0);
-	ft_strlcpy(str, s + start, i + 1);
+	strlcpy(str, s + start, i + 1);
 	return (str);
 }
 
@@ -254,6 +264,60 @@ int	bound(int c)
 	return ((int)c);
 }
 
+int check_line_is_empty(char *line)
+{
+	int i = 0;
+	while (line[i])
+	{
+		if (line[i] != ' ' || line[i] != '\t' || line[i] != '\n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int ft_isdigit(char *str)
+{
+	int i = 0;
+	while (str[i])
+	{
+		if (*(str + i) < '0' || *(str + i) > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int set_color(char **color)
+{
+	// size of color must be 3
+	int i = 0;
+	while(color[i])
+	{
+		if (!ft_isdigit(color[i]))
+			return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+		i++;
+	}
+	if (i != 3)
+		return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+	return (bound(atoi(color[0])) << 24 | bound(atoi(color[1])) << 16 | bound(atoi(color[2])) << 8 | 1);
+}
+
+int check_commas(char *str)
+{
+	int i = 0;
+	int commas = 0;
+	while (str[i])
+	{
+		if (str[i] == ',')
+			commas++;
+		i++;
+	}
+	if (commas != 2)
+		return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+	return (0);
+}
+
 int main(int ac, char **av)
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\/
@@ -274,31 +338,27 @@ int main(int ac, char **av)
 	// Read file content
 
 	int number_of_lines = 0;
-	bool map_started = false;
-	bool is_map_valid = true;
 
 	t_map map;
 	init_map(&map);
-
 	char *dir;
 	char *line;
 	char *path;
 	short flag = 0;
 	short full_flag = 1 | 2 | 4 | 8 | 16 | 32;
-	static char *kk[6] = {"NO", "SO", "WE", "EA", "F", "C"};
+	static char *kk[6] = {"NO", "SO", "WE", "EA", "C", "F"};
 	static short kk_flag[6] = {1, 2, 4, 8, 16, 32};
 	while (true && flag != full_flag)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
-			break;
-		char *trimmed_line = ft_strtrim(line);
+			break ;
+		char *trimmed_line = ft_strtrim(line, "\n \t");
 
 		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
 			continue;
 		if (!check_line_ones(trimmed_line))
 		{
-
 			printf("	[ %s ]\n", trimmed_line);
 			dir = ft_strtok(trimmed_line, " ");
 			path = ft_strtok(NULL, "");
@@ -321,8 +381,13 @@ int main(int ac, char **av)
 					{
 						if (path == NULL)
 							return (ft_putstr_fd("Error\nInvalid path", 2), 1);
+						if (check_commas(path))
+							return (1);
 						char **color = ft_split(path, ',');
-						*((int *)&map.f + (i - 4)) = (bound(atoi(color[0])) << 24 | bound(atoi(color[1])) << 16 | bound(atoi(color[2])) << 8 | 1);
+						int rgb = set_color(color);
+						if (rgb == 1)
+							return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+						*((int *)&map.c + (i - 4)) = rgb;
 					}
 				}
 				i++;
@@ -342,29 +407,43 @@ int main(int ac, char **av)
 		}
 		return (ft_putstr_fd("Error\nMissing key", 2), 1);
 	}
-
+	char *tmp;
+	while (true)
+	{
+		line = get_next_line(fd);
+		if (line == NULL)
+			break ;
+		// check if line is empty with spaces or tabs or new line;
+		if (check_line_is_empty(line))
+			continue;
+		char *trimmed_line = ft_strtrim(line, "\n ");
+		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
+			continue;
+		printf("	{ %s }\n", trimmed_line);
+		
+	}
+	puts("\n--------- Map ---------");
 	printf("C. %u, F. %u\n", map.c.value, map.f.value);
-	printf("no: %s\n", map.no);
-	printf("so: %s\n", map.so);
-	printf("we: %s\n", map.we);
-	printf("ea: %s\n", map.ea);
+	printf("NO : %s\n", map.no);
+	printf("SO : %s\n", map.so);
+	printf("WE : %s\n", map.we);
+	printf("EA : %s\n", map.ea);
 	
-	puts("\n--------- F ---------");
-	printf("color: %X\n", map.f.value);
-	printf("color r: %d\n", map.f.r);
-	printf("color g: %d\n", map.f.g);
-	printf("color b: %d\n", map.f.b);
-	printf("color a: %d\n", map.f.a);
-	puts("--------- C ---------");
-	printf("color: %X\n", map.c.value);
-	printf("color r: %d\n", map.c.r);
-	printf("color g: %d\n", map.c.g);
-	printf("color b: %d\n", map.c.b);
-	printf("color a: %d\n", map.c.a);
+	puts("\n--------- Floor ---------");
+	printf("COLOR ======>	: %#x\n",	map.f.value);
+	printf("COLOR => Red	: %d\n", map.f.r);
+	printf("COLOR => Green	: %d\n", map.f.g);
+	printf("COLOR => Blue	: %d\n", map.f.b);
+	printf("COLOR => Alpha	: %d\n", map.f.a);
+
+	puts("\n--------- Ceiling ---------");
+	printf("COLOR ======>	: %#x\n",	map.c.value);
+	printf("COLOR => Red	: %d\n", map.c.r);
+	printf("COLOR => Green	: %d\n", map.c.g);
+	printf("COLOR => Blue	: %d\n", map.c.b);
+	printf("COLOR => Alpha	: %d\n", map.c.a);
 
 	if (number_of_lines == 0)
 		return (ft_putstr_fd("Error\nFile is empty", 2), 1);
-	if (is_map_valid == false)
-		return (ft_putstr_fd("Error\nInvalid Map", 2), 1);
 	return (0);
 }
