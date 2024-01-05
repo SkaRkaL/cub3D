@@ -318,6 +318,18 @@ int check_commas(char *str)
 	return (0);
 }
 
+int is_not_empty(char *str)
+{
+	int i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' || str[i] != '\t')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int main(int ac, char **av)
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\/
@@ -351,7 +363,7 @@ int main(int ac, char **av)
 	while (true && flag != full_flag)
 	{
 		line = get_next_line(fd);
-		if (line == NULL)
+		if (line == NULL || all_ones(line))
 			break ;
 		char *trimmed_line = ft_strtrim(line, "\n \t");
 
@@ -407,7 +419,9 @@ int main(int ac, char **av)
 		}
 		return (ft_putstr_fd("Error\nMissing key", 2), 1);
 	}
-	char *tmp;
+	char *tmp = ft_strdup("");
+	bool is_map = false;
+	char *trimmed_line;
 	while (true)
 	{
 		line = get_next_line(fd);
@@ -416,12 +430,24 @@ int main(int ac, char **av)
 		// check if line is empty with spaces or tabs or new line;
 		if (check_line_is_empty(line))
 			continue;
-		char *trimmed_line = ft_strtrim(line, "\n ");
+		trimmed_line = ft_strtrim(line, "\n");
+		// join all lines to one string char **map and split it with newline 
 		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
 			continue;
+		if (is_not_empty(trimmed_line) == 0 || all_ones(trimmed_line) == 1)
+		{
+			tmp = ft_strjoin(tmp, trimmed_line);
+			is_map = true;
+		}
+		tmp = ft_strjoin(tmp, "\n");
+		number_of_lines++;
+		map.map = ft_split(tmp, '\n');
+		if (map.map == NULL)
+			return (ft_putstr_fd("Error\nInvalid map", 2), 1);
 		printf("	{ %s }\n", trimmed_line);
-		
 	}
+	fprintf(stderr, "%s", tmp);
+	// puts(map.map[0]);
 	puts("\n--------- Map ---------");
 	printf("C. %u, F. %u\n", map.c.value, map.f.value);
 	printf("NO : %s\n", map.no);
