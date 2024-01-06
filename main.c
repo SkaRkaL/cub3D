@@ -1,5 +1,30 @@
 #include "cub3D.h"
 
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	signe;
+	int	resu;
+
+	i = 0;
+	signe = 1;
+	resu = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			signe *= -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		resu = resu * 10 + (str[i] - 48);
+		i++;
+	}
+	return (resu * signe);
+}
+
 int is_white_space(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n');
@@ -240,6 +265,28 @@ int all_ones(char *str)
 	return (1);
 }
 
+int all_one(char *str, bool *is_map)
+{
+	int i;
+
+	i = 0;
+	while (str[i] == ' ')
+		i++;
+
+	if (str[i] == '1')
+	{
+		*is_map = true;
+		i++;
+		while (str[i] && str[i] != ' ')
+		{
+			if (str[i] != '1')
+				return (0);
+			i++;
+		}
+	}
+	return (1);
+}
+
 int check_line_ones(char *line)
 {
 	int tmp_i;
@@ -247,7 +294,7 @@ int check_line_ones(char *line)
 	tmp_i = 0;
 	while (line[tmp_i])
 	{
-		if (line[tmp_i] != '1')
+		if (line[tmp_i] != '1' || line[tmp_i] != 'N' || line[tmp_i] != '0')
 			return (0);
 		else
 			tmp_i++;
@@ -267,9 +314,9 @@ int	bound(int c)
 int check_line_is_empty(char *line)
 {
 	int i = 0;
-	while (line[i])
+	while (line[i] != '\n')
 	{
-		if (line[i] != ' ' || line[i] != '\t' || line[i] != '\n')
+		if (line[i] != ' ' || line[i] != '\t')
 			return (0);
 		i++;
 	}
@@ -295,12 +342,17 @@ int set_color(char **color)
 	while(color[i])
 	{
 		if (!ft_isdigit(color[i]))
-			return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+			return (1);
 		i++;
 	}
 	if (i != 3)
-		return (ft_putstr_fd("Error\nInvalid color", 2), 1);
-	return (bound(atoi(color[0])) << 24 | bound(atoi(color[1])) << 16 | bound(atoi(color[2])) << 8 | 1);
+		return (1);
+	if (ft_atoi(color[0]) > 255 || ft_atoi(color[1]) > 255 || ft_atoi(color[2]) > 255)
+		return (1);
+	if (ft_atoi(color[0]) < 0 || ft_atoi(color[1]) < 0 || ft_atoi(color[2]) < 0)
+		return (1);
+	// TODO : check if color is valid don't bound that
+	return (bound(ft_atoi(color[0])) << 24 | bound(ft_atoi(color[1])) << 16 | bound(ft_atoi(color[2])) << 8 | 1);
 }
 
 int check_commas(char *str)
@@ -314,7 +366,7 @@ int check_commas(char *str)
 		i++;
 	}
 	if (commas != 2)
-		return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+		return (1);
 	return (0);
 }
 
@@ -323,16 +375,27 @@ int is_not_empty(char *str)
 	int i = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ' || str[i] != '\t')
+		if (str[i] != ' ' || str[i] != '\t' || str[i] != '\n')
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
+char *ft_repeat(char c, size_t a)
+{
+    char *s = malloc((a + 1) * sizeof(char));
+	if (!s)
+		return (NULL);
+    for (int i = 0; i < a; i++)
+        s[i] = c;
+	s[a] = '\0';
+    return (s);
+}
+
 int main(int ac, char **av)
 {
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\/
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\/
 	if (ac != 2)
 		return (ft_putstr_fd("Error\nWrong number of arguments", 2), 1);
 	if (ft_strncmp(av[1] + ft_strlen(av[1]) - 4, ".cub", 4))
@@ -344,7 +407,6 @@ int main(int ac, char **av)
 	int fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 		return (ft_putstr_fd("Error\nFile not found", 2), 1);
-
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\\/
 
 	// Read file content
@@ -360,7 +422,8 @@ int main(int ac, char **av)
 	short full_flag = 1 | 2 | 4 | 8 | 16 | 32;
 	static char *kk[6] = {"NO", "SO", "WE", "EA", "C", "F"};
 	static short kk_flag[6] = {1, 2, 4, 8, 16, 32};
-	while (true && flag != full_flag)
+	int map_index = 0;
+	while (flag != full_flag)
 	{
 		line = get_next_line(fd);
 		if (line == NULL || all_ones(line))
@@ -371,7 +434,7 @@ int main(int ac, char **av)
 			continue;
 		if (!check_line_ones(trimmed_line))
 		{
-			printf("	[ %s ]\n", trimmed_line);
+			// printf("	[ %s ]\n", trimmed_line);
 			dir = ft_strtok(trimmed_line, " ");
 			path = ft_strtok(NULL, "");
 			int i = 0;
@@ -408,6 +471,8 @@ int main(int ac, char **av)
 
 		number_of_lines++;
 	}
+	if (number_of_lines == 0)
+		return (ft_putstr_fd("Error\nFile is empty", 2), 1);
 	if (flag != full_flag)
 	{
 		int i = 0;
@@ -422,54 +487,136 @@ int main(int ac, char **av)
 	char *tmp = ft_strdup("");
 	bool is_map = false;
 	char *trimmed_line;
-	while (true)
+	int largest_line_length = 0;
+	while(true)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
 			break ;
-		// check if line is empty with spaces or tabs or new line;
-		if (check_line_is_empty(line))
-			continue;
-		trimmed_line = ft_strtrim(line, "\n");
-		// join all lines to one string char **map and split it with newline 
-		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
-			continue;
-		if (is_not_empty(trimmed_line) == 0 || all_ones(trimmed_line) == 1)
+		int line_length = ft_strlen(line);
+		if (line[line_length - 1] == '\n')
+			line_length--;
+		if (line_length > largest_line_length)
+				largest_line_length = line_length;
+		trimmed_line = ft_strtrim(line, "\t ");
+		if (ft_strlen(trimmed_line) == 1)
 		{
-			tmp = ft_strjoin(tmp, trimmed_line);
-			is_map = true;
+			free(trimmed_line);
+			continue ;
 		}
-		tmp = ft_strjoin(tmp, "\n");
+		free(trimmed_line);
+		tmp = ft_strjoin(tmp, line);
 		number_of_lines++;
-		map.map = ft_split(tmp, '\n');
-		if (map.map == NULL)
-			return (ft_putstr_fd("Error\nInvalid map", 2), 1);
-		printf("	{ %s }\n", trimmed_line);
 	}
-	fprintf(stderr, "%s", tmp);
-	// puts(map.map[0]);
-	puts("\n--------- Map ---------");
-	printf("C. %u, F. %u\n", map.c.value, map.f.value);
-	printf("NO : %s\n", map.no);
-	printf("SO : %s\n", map.so);
-	printf("WE : %s\n", map.we);
-	printf("EA : %s\n", map.ea);
+	map.map = ft_split(tmp, '\n');
+	int i;
+	int opn;
+	i = 0;
+	while (i < 4)
+	{
+		if (ft_strncmp(*((char **)&map.no + i) + ft_strlen(*((char **)&map.no + i)) - 4, ".xpm", 4) || !(flag & kk_flag[i]))
+			return (printf("Error\nMissing [ %s ] Texture file \n", kk[i]), 1);
+		i++;
+	}
+	i = 0;
+	while (i < 4)
+	{
+		opn = open(*((char **)&map.no + i), O_RDONLY);
+		if (opn == -1 || !(flag & kk_flag[i]))
+			return (printf("Error\nMissing [ %s ] Invalid path \n", kk[i]), 1);
+		i++;
+	}
+	printf("max length = %d\n", largest_line_length);
+
+	i = 0;
+	char *spaces;
+	while (i < number_of_lines - 6)
+	{
+		int line_length = ft_strlen(map.map[i]);
+		if (line_length < largest_line_length)
+		{
+			spaces = ft_repeat(' ', largest_line_length - line_length);
+			char *temp = map.map[i];
+			map.map[i] = ft_strjoin(temp, spaces);
+			free(temp);
+			free(spaces);
+		}
+		i++;
+	}
+/* 
+	// TODO : check if map is valid -> 
+				1. only 1 player 
+				2. if there a space it must be surrounded by ones 
+				3. no invalid characters
+ */
+
+// still need to check if map is valid : ERRROOOOOOOOOORRR hna l te7t
+	int x = 0;
+	int y = 0;
+	int player_count = 0;
+	while (map.map[x])
+	{
+		y = 0;
+		while (map.map[x][y])
+		{
+			if (map.map[x][y] == 'N' || map.map[x][y] == 'S' || map.map[x][y] == 'E' || map.map[x][y] == 'W')
+			{
+				player_count++;
+				if (player_count > 1)
+					return (ft_putstr_fd("Error\nMultiple players", 2), 1);
+			}
+			if (map.map[x][y] != '1' && map.map[x][y] != '0' && map.map[x][y] != 'N' && map.map[x][y] != 'S' && map.map[x][y] != 'E' && map.map[x][y] != 'W')
+				return (ft_putstr_fd("Error\nInvalid character in map", 2), 1);
+			if (map.map[x][y] == ' ')
+			{
+				if (x == 0 || x == number_of_lines - 7 || y == 0 || y == largest_line_length - 1)
+					return (ft_putstr_fd("Error\nInvalid map", 2), 1);
+				if (map.map[x - 1][y] != '1' || map.map[x + 1][y] != '1' || map.map[x][y - 1] != '1' || map.map[x][y + 1] != '1')
+					return (ft_putstr_fd("Error\nInvalid map", 2), 1);
+			}
+			y++;
+		}
+		x++;
+	}
+
+
+	for(int i = 0; i < number_of_lines - 6; i++)
+	{
+		printf("|%s|\n", map.map[i]);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// puts("\n--------- Map ---------");
+	// printf("C. %u, F. %u\n", map.c.value, map.f.value);
+	// printf("NO : %s\n", map.no);
+	// printf("SO : %s\n", map.so);
+	// printf("WE : %s\n", map.we);
+	// printf("EA : %s\n", map.ea);
 	
-	puts("\n--------- Floor ---------");
-	printf("COLOR ======>	: %#x\n",	map.f.value);
-	printf("COLOR => Red	: %d\n", map.f.r);
-	printf("COLOR => Green	: %d\n", map.f.g);
-	printf("COLOR => Blue	: %d\n", map.f.b);
-	printf("COLOR => Alpha	: %d\n", map.f.a);
+	// puts("\n--------- Floor ---------");
+	// printf("COLOR ======>	: %#x\n",	map.f.value);
+	// printf("COLOR => Red	: %d\n", map.f.r);
+	// printf("COLOR => Green	: %d\n", map.f.g);
+	// printf("COLOR => Blue	: %d\n", map.f.b);
+	// printf("COLOR => Alpha	: %d\n", map.f.a);
 
-	puts("\n--------- Ceiling ---------");
-	printf("COLOR ======>	: %#x\n",	map.c.value);
-	printf("COLOR => Red	: %d\n", map.c.r);
-	printf("COLOR => Green	: %d\n", map.c.g);
-	printf("COLOR => Blue	: %d\n", map.c.b);
-	printf("COLOR => Alpha	: %d\n", map.c.a);
+	// puts("\n--------- Ceiling ---------");
+	// printf("COLOR ======>	: %#x\n",	map.c.value);
+	// printf("COLOR => Red	: %d\n", map.c.r);
+	// printf("COLOR => Green	: %d\n", map.c.g);
+	// printf("COLOR => Blue	: %d\n", map.c.b);
+	// printf("COLOR => Alpha	: %d\n", map.c.a);
 
-	if (number_of_lines == 0)
-		return (ft_putstr_fd("Error\nFile is empty", 2), 1);
 	return (0);
 }
