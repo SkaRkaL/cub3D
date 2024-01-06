@@ -7,7 +7,7 @@ OBJ = $(SRC:.c=.o)
 CC  = cc
 
 # CFLAGS = -Wall -Wextra -Werror #-L libft -lft -lmlx -framework OpenGL -framework AppKit
-CFLAGS =  -Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS =  -fsanitize=address -g
 
 all: $(NAME)
 
