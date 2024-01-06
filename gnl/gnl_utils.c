@@ -53,8 +53,6 @@ char	*ft_strjoin(char *save, char *buff)
 	while (buff[++j] != '\0')
 		str[i + j] = buff[j];
 	str[i + j] = '\0';
-	// free(save);
-	// free(buff);
 	return (str);
 }
 
