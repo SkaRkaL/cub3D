@@ -382,6 +382,16 @@ int is_not_empty(char *str)
 	return (1);
 }
 
+bool	is_a_mamber(char c)
+{
+	return (c == '0' || c == 'W' || c == 'S' || c == 'N' || c == 'E' || c == '1');
+}
+
+bool	is_a_player(char c)
+{
+	return (c == 'W' || c == 'S' || c == 'N' || c == 'E');
+}
+
 char *ft_repeat(char c, size_t a)
 {
     char *s = malloc((a + 1) * sizeof(char));
@@ -558,7 +568,7 @@ int main(int ac, char **av)
 			if (is_a_player(map.map[i][j]))
 			{
 				if (map.x != 0)
-					exit(printf("ERROR IN MAP\n"));
+					exit(printf("Zaaaabi\n"));
 				map.x = j;
 				map.y = i;
 			}
@@ -567,24 +577,23 @@ int main(int ac, char **av)
 			if (is_a_mamber(map.map[i][j]) && map.map[i][j] != '1')
 			{
 				if (j == 0 || map.map[i][j + 1] ==  '\0')
-					exit(printf("ERROR IN MAP\n"));
+					exit(printf("l9lawi\n"));
 				if (i == 0 || i == number_of_lines - 5)
-					exit(printf("ERROR IN MAP again\n"));
+					exit(printf("l9lawi again\n"));
 				if (!is_a_mamber(map.map[i][j + 1]))
-					exit(printf("ERROR IN MAP again\n"));
+					exit(printf("l9lawi again\n"));
 				if (!is_a_mamber(map.map[i][j - 1]))
-					exit(printf("ERROR IN MAP again\n"));
+					exit(printf("l9lawi again\n"));
 				if (!is_a_mamber(map.map[i + 1][j]))
-					exit(printf("ERROR IN MAP again\n"));
+					exit(printf("l9lawi again\n"));
 				if (!is_a_mamber(map.map[i - 1][j]))
-					exit(printf("ERROR IN MAP again\n"));
+					exit(printf("l9lawi again\n"));
 			}
 		}
 	}
 
 	if (!map.x)
 		exit(puts("No Player in your map"));
-
 
 	for(int i = 0; i < number_of_lines - 6; i++)
 	{
