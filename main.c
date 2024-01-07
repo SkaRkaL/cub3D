@@ -550,34 +550,40 @@ int main(int ac, char **av)
 				3. no invalid characters
  */
 
-// still need to check if map is valid : ERRROOOOOOOOOORRR hna l te7t
-	int x = 0;
-	int y = 0;
-	int player_count = 0;
-	while (map.map[x])
+// still need to check if map is valid : ERRROOOOOOOOOORRR hna l te
+	for (int i  = 0; i < number_of_lines - 6; i++)
 	{
-		y = 0;
-		while (map.map[x][y])
+		for (int j = 0; map.map[i][j]; j++)
 		{
-			if (map.map[x][y] == 'N' || map.map[x][y] == 'S' || map.map[x][y] == 'E' || map.map[x][y] == 'W')
+			if (is_a_player(map.map[i][j]))
 			{
-				player_count++;
-				if (player_count > 1)
-					return (ft_putstr_fd("Error\nMultiple players", 2), 1);
+				if (map.x != 0)
+					exit(printf("ERROR IN MAP\n"));
+				map.x = j;
+				map.y = i;
 			}
-			if (map.map[x][y] != '1' && map.map[x][y] != '0' && map.map[x][y] != 'N' && map.map[x][y] != 'S' && map.map[x][y] != 'E' && map.map[x][y] != 'W')
-				return (ft_putstr_fd("Error\nInvalid character in map", 2), 1);
-			if (map.map[x][y] == ' ')
+			if (!(is_a_mamber(map.map[i][j]) || map.map[i][j] == ' '))
+				exit(printf("Non valid elemnt!\n"));
+			if (is_a_mamber(map.map[i][j]) && map.map[i][j] != '1')
 			{
-				if (x == 0 || x == number_of_lines - 7 || y == 0 || y == largest_line_length - 1)
-					return (ft_putstr_fd("Error\nInvalid map", 2), 1);
-				if (map.map[x - 1][y] != '1' || map.map[x + 1][y] != '1' || map.map[x][y - 1] != '1' || map.map[x][y + 1] != '1')
-					return (ft_putstr_fd("Error\nInvalid map", 2), 1);
+				if (j == 0 || map.map[i][j + 1] ==  '\0')
+					exit(printf("ERROR IN MAP\n"));
+				if (i == 0 || i == number_of_lines - 5)
+					exit(printf("ERROR IN MAP again\n"));
+				if (!is_a_mamber(map.map[i][j + 1]))
+					exit(printf("ERROR IN MAP again\n"));
+				if (!is_a_mamber(map.map[i][j - 1]))
+					exit(printf("ERROR IN MAP again\n"));
+				if (!is_a_mamber(map.map[i + 1][j]))
+					exit(printf("ERROR IN MAP again\n"));
+				if (!is_a_mamber(map.map[i - 1][j]))
+					exit(printf("ERROR IN MAP again\n"));
 			}
-			y++;
 		}
-		x++;
 	}
+
+	if (!map.x)
+		exit(puts("No Player in your map"));
 
 
 	for(int i = 0; i < number_of_lines - 6; i++)
