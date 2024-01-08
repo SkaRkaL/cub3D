@@ -223,7 +223,6 @@ char *gnl(int fd, char **tr)
 	return (*tr);
 }
 
-// " abcde"
 int ft_strchr(char *s, int c)
 {
 	int i;
@@ -351,7 +350,6 @@ int set_color(char **color)
 		return (1);
 	if (ft_atoi(color[0]) < 0 || ft_atoi(color[1]) < 0 || ft_atoi(color[2]) < 0)
 		return (1);
-	// TODO : check if color is valid don't bound that
 	return (bound(ft_atoi(color[0])) << 24 | bound(ft_atoi(color[1])) << 16 | bound(ft_atoi(color[2])) << 8 | 1);
 }
 
@@ -444,7 +442,6 @@ int main(int ac, char **av)
 			continue;
 		if (!check_line_ones(trimmed_line))
 		{
-			// printf("	[ %s ]\n", trimmed_line);
 			dir = ft_strtok(trimmed_line, " ");
 			path = ft_strtok(NULL, "");
 			int i = 0;
@@ -553,14 +550,7 @@ int main(int ac, char **av)
 		}
 		i++;
 	}
-/* 
-	// TODO : check if map is valid -> 
-				1. only 1 player 
-				2. if there a space it must be surrounded by ones 
-				3. no invalid characters
- */
 
-// still need to check if map is valid : ERRROOOOOOOOOORRR hna l te
 	for (int i  = 0; i < number_of_lines - 6; i++)
 	{
 		for (int j = 0; map.map[i][j]; j++)
@@ -600,38 +590,26 @@ int main(int ac, char **av)
 		printf("|%s|\n", map.map[i]);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-	// puts("\n--------- Map ---------");
-	// printf("C. %u, F. %u\n", map.c.value, map.f.value);
-	// printf("NO : %s\n", map.no);
-	// printf("SO : %s\n", map.so);
-	// printf("WE : %s\n", map.we);
-	// printf("EA : %s\n", map.ea);
+	puts("\n--------- Map ---------");
+	printf("C. %u, F. %u\n", map.c.value, map.f.value);
+	printf("NO : %s\n", map.no);
+	printf("SO : %s\n", map.so);
+	printf("WE : %s\n", map.we);
+	printf("EA : %s\n", map.ea);
 	
-	// puts("\n--------- Floor ---------");
-	// printf("COLOR ======>	: %#x\n",	map.f.value);
-	// printf("COLOR => Red	: %d\n", map.f.r);
-	// printf("COLOR => Green	: %d\n", map.f.g);
-	// printf("COLOR => Blue	: %d\n", map.f.b);
-	// printf("COLOR => Alpha	: %d\n", map.f.a);
+	puts("\n--------- Floor ---------");
+	printf("COLOR ======>	: %#x\n",	map.f.value);
+	printf("COLOR => Red	: %d\n", map.f.r);
+	printf("COLOR => Green	: %d\n", map.f.g);
+	printf("COLOR => Blue	: %d\n", map.f.b);
+	printf("COLOR => Alpha	: %d\n", map.f.a);
 
-	// puts("\n--------- Ceiling ---------");
-	// printf("COLOR ======>	: %#x\n",	map.c.value);
-	// printf("COLOR => Red	: %d\n", map.c.r);
-	// printf("COLOR => Green	: %d\n", map.c.g);
-	// printf("COLOR => Blue	: %d\n", map.c.b);
-	// printf("COLOR => Alpha	: %d\n", map.c.a);
+	puts("\n--------- Ceiling ---------");
+	printf("COLOR ======>	: %#x\n",	map.c.value);
+	printf("COLOR => Red	: %d\n", map.c.r);
+	printf("COLOR => Green	: %d\n", map.c.g);
+	printf("COLOR => Blue	: %d\n", map.c.b);
+	printf("COLOR => Alpha	: %d\n", map.c.a);
 
 	return (0);
 }
