@@ -14,7 +14,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-.o: .c
+.o: .c cub3D.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

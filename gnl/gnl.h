@@ -9,10 +9,10 @@
 
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 100
 # endif
 
-int		ft_strlen(char *s);
+int		ft_strlen(const char *s);
 char	*ft_strdup(char *s1);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_search(char *str, int c);

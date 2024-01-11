@@ -24,6 +24,8 @@ typedef union u_color
 
 typedef struct s_map
 {
+	int height;
+	int width;
 	int x;
 	int y;
 	char **map;
@@ -41,7 +43,7 @@ int check_line_is_empty(char *line);
 
 ////////////////////////    UTILS     ///////////////////////////
 char *ft_strdup(char *s1);
-int ft_strchr(char *s, int c);
+char	*ft_strchr(const char *s, int c);
 char *ft_substr(char const *s, unsigned int start, int len);
 char **ft_split(char *str, char c);
 
