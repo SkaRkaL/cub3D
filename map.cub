@@ -1,7 +1,7 @@
 EA textures/EAST.xpm 
 NO textures/NORTH.xpm
 C 128,198,165
-F 111,1,5
+F 111,2,5
 
 SO textures/SOUTH.xpm
 WE textures/WEST.xpm

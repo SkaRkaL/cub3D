@@ -1,6 +1,6 @@
 NAME = cub3D
 
-SRC = main.c gnl/gnl_utils.c gnl/gnl.c split.c
+SRC = main.c gnl/gnl_utils.c gnl/gnl.c split.c atoi.c strtrim.c strtok.c
 
 OBJ = $(SRC:.c=.o)
 

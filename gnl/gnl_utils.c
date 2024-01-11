@@ -1,4 +1,4 @@
-#include"gnl.h"
+#include "gnl.h"
 
 int	ft_strlen(const char *s)
 {
@@ -13,7 +13,7 @@ int	ft_strlen(const char *s)
 char	*ft_strdup(char *s)
 {
 	int		i;
-	int	y;
+	int		y;
 	char	*ptr;
 
 	i = 0;
@@ -28,13 +28,12 @@ char	*ft_strdup(char *s)
 	}
 	ptr[i] = '\0';
 	return (ptr);
-	
 }
 
 char	*ft_strjoin(char *save, char *buff)
 {
 	char	*str;
-	int	total;
+	int		total;
 	int		i;
 	int		j;
 
