@@ -40,20 +40,6 @@ int	ft_strncmp(char *s1, char *s2, int n)
 	return (0);
 }
 
-void	init_map(t_map *map)
-{
-	map->height = 0;
-	map->width = 0;
-	map->x = 0;
-	map->y = 0;
-	map->map = NULL;
-	map->no = NULL;
-	map->so = NULL;
-	map->we = NULL;
-	map->ea = NULL;
-	map->f.value = 0;
-	map->c.value = 0;
-}
 
 int	all_ones(char *str)
 {
@@ -97,17 +83,23 @@ int	bound(int c)
 	return ((int)c);
 }
 
-int	ft_isdigit(char *str)
+int	invalid_number(char *str)
 {
 	int	i;
+	int start_number; 
 
 	i = 0;
+	while(str[i] == '0')
+		i++;
+	start_number = i;
 	while (str[i])
 	{
 		if (*(str + i) < '0' || *(str + i) > '9')
 			return (0);
 		i++;
 	}
+	if (i - start_number > 3)
+		return (0);
 	return (1);
 }
 
@@ -121,7 +113,7 @@ int	set_color(char **color)
 	i = 0;
 	while (color[i])
 	{
-		if (!ft_isdigit(color[i]))
+		if (!invalid_number(color[i]))
 			return (1);
 		i++;
 	}
@@ -134,7 +126,7 @@ int	set_color(char **color)
 		return (1);
 	if (r < 0 || g < 0 || b < 0)
 		return (1);
-	return (bound(r) << 24 | bound(g) << 16 | bound(b) << 8 | 1);
+	return (r << 24 | g << 16 | b << 8 | 1);
 }
 
 int	check_commas(char *str)
@@ -184,6 +176,16 @@ char	*ft_repeat(char c, size_t a)
 	return (s);
 }
 
+void	*ft_memset(void *b, int c, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+		*((char *)b + i++) = c;
+	return (b);
+}
+
 int main(int ac, char **av)
 {
 	int	fd;
@@ -206,7 +208,6 @@ int main(int ac, char **av)
 	static char		*kk[6] = {"NO", "SO", "WE", "EA", "C", "F"};
 	static short	kk_flag[6] = {1, 2, 4, 8, 16, 32};
 	short			flag;
-	int				map_index;
 	short			full_flag;
 	int				number_of_lines;
 	char			*dir;
@@ -217,55 +218,59 @@ int main(int ac, char **av)
 
 	is_map = false;
 	flag = 0;
-	map_index = 0;
 	number_of_lines = 0;
 	full_flag = 1 | 2 | 4 | 8 | 16 | 32;
-	init_map(&map);
+	ft_memset(&map, 0, sizeof(t_map));
+	char **color = NULL;
 	while (flag != full_flag)
 	{
 		line = get_next_line(fd);
-		if (line == NULL || all_ones(line))
+		if (line == NULL)
 			break ;
 		trimmed_line = ft_strtrim(line, "\n \t");
 		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
-			continue;
-		if (!check_line_ones(trimmed_line))
 		{
-			dir = ft_strtok(trimmed_line, " ");
-			path = ft_strtok(NULL, "");
-			int i = 0;
-			while (i < 6)
-			{
-				if (!ft_strncmp(dir, kk[i], ft_strlen(kk[i])))
-				{
-					if (flag & kk_flag[i])
-						return (ft_putstr_fd("Error\nDuplicate key", 2), 1);
-					flag |= kk_flag[i];
-
-					if (i < 4)
-					{
-						if (path == NULL)
-							return (ft_putstr_fd("Error\nInvalid path", 2), 1);
-						*((char **)&map.no + i) = ft_strdup(path);
-					}
-					else
-					{
-						if (path == NULL)
-							return (ft_putstr_fd("Error\nInvalid path", 2), 1);
-						if (check_commas(path))
-							return (1);
-						char **color = ft_split(path, ',');
-						int rgb = set_color(color);
-						if (rgb == 1)
-							return (ft_putstr_fd("Error\nInvalid color", 2), 1);
-						*((int *)&map.c + (i - 4)) = rgb;
-					}
-				}
-				i++;
-			}
+			free(trimmed_line);
+			free(line);
+			continue ;
 		}
-
+		dir = ft_strtok(trimmed_line, " ");
+		path = ft_strtok(NULL, "");
+		if (path == NULL)
+			return (ft_putstr_fd("Error\nInvalid path", 2), 1);
+		int i = 0;
+		while (i < 6)
+		{
+			if (!ft_strncmp(dir, kk[i], ft_strlen(kk[i])))
+			{
+				if (flag & kk_flag[i])
+					return (ft_putstr_fd("Error\nDuplicate key", 2), 1);
+				flag |= kk_flag[i];
+				if (i < 4)
+				{
+					*((char **)&map.no + i) = ft_strdup(path);
+				}
+				else
+				{
+					if (check_commas(path))
+						return (printf("ERROR\nINVALID COLOR"), 1);
+					color = ft_split(path, ',');
+					int rgb = set_color(color);
+					if (rgb == 1)
+						return (ft_putstr_fd("Error\nInvalid color", 2), 1);
+					*((int *)&map.c + (i - 4)) = rgb;
+					check_isfree(color);
+					color = NULL;
+				}
+				free(path);
+			}
+			i++;
+		}
 		number_of_lines++;
+		free(trimmed_line);
+		free(line);
+		free(dir);
+
 	}
 	if (number_of_lines == 0)
 		return (ft_putstr_fd("Error\nFile is empty", 2), 1);
@@ -281,8 +286,7 @@ int main(int ac, char **av)
 		return (ft_putstr_fd("Error\nMissing key", 2), 1);
 	}
 	char *tmp = ft_strdup("");
-	free(trimmed_line);
-	trimmed_line = NULL;
+
 	map.width = 0;
 	while(true)
 	{
@@ -298,54 +302,39 @@ int main(int ac, char **av)
 		if (ft_strlen(trimmed_line) == 1 && is_map == false)
 		{
 			free(trimmed_line);
+			free(line);
 			continue ;
+		}
+		else if (ft_strlen(trimmed_line) == 1 && is_map == true)
+		{
+			exit(printf("Error\nInvalid map\n"));
 		}
 		else
 			is_map = true;
 		free(trimmed_line);
 		tmp = ft_strjoin(tmp, line);
-		number_of_lines++;
+		map.height++;
 	}
 	map.map = ft_split(tmp, '\n');
-	for (int index = 0; tmp[index]; index++)
-		if (tmp[index] == '\n' && tmp[index + 1] && tmp[index + 1] == '\n')
-			exit(printf("Error\nInvalid map\n"));
-	int i;
-	int opn;
-	i = 0;
-	while (i < 4)
-	{
-		if (ft_strncmp(*((char **)&map.no + i) + ft_strlen(*((char **)&map.no + i)) - 4, ".xpm", 4) || !(flag & kk_flag[i]))
-			return (printf("Error\nMissing [ %s ] Texture file \n", kk[i]), 1);
-		i++;
-	}
-	i = 0;
-	while (i < 4)
-	{
-		opn = open(*((char **)&map.no + i), O_RDONLY);
-		if (opn == -1 || !(flag & kk_flag[i]))
-			return (printf("Error\nMissing [ %s ] Invalid path \n", kk[i]), 1);
-		i++;
-	}
+	if (map.map == NULL)
+		exit(printf("Error\nInvalid map\n"));
+	free(tmp);
 
-	i = 0;
+	int i = 0;
 	char *spaces;
-	while (i < number_of_lines - 6)
+	while (i < map.height)
 	{
 		int line_length = ft_strlen(map.map[i]);
 		if (line_length < map.width)
 		{
 			spaces = ft_repeat(' ', map.width - line_length);
-			char *temp = map.map[i];
-			map.map[i] = ft_strjoin(temp, spaces);
-			free(temp);
-			free(spaces);
+			map.map[i] = ft_strjoin(map.map[i], spaces);
 		}
 		i++;
 	}
 
-	int height = 0;
-	for (int i  = 0; i < number_of_lines - 6; i++)
+
+	for (int i  = 0; i < map.height; i++)
 	{
 		for (int j = 0; map.map[i][j]; j++)
 		{
@@ -362,32 +351,27 @@ int main(int ac, char **av)
 			{
 				if (j == 0 || map.map[i][j + 1] ==  '\0')
 					exit(printf("Error\n"));
-				if (i == 0 || i == number_of_lines - 5)
-					exit(printf("Error again\n"));
+				if (i == 0 || i == map.height - 1)
+					exit(printf("Error again 1\n"));
 				if (!is_a_mamber(map.map[i][j + 1]))
-					exit(printf("Error again\n"));
+					exit(printf("Error again 2\n"));
 				if (!is_a_mamber(map.map[i][j - 1]))
-					exit(printf("Error again\n"));
+					exit(printf("Error again 3\n"));
 				if (!is_a_mamber(map.map[i + 1][j]))
-					exit(printf("Error again\n"));
+					exit(printf("Error again 4\n"));
 				if (!is_a_mamber(map.map[i - 1][j]))
-					exit(printf("Error again\n"));
-				// if line only spaces or len == 1
+					exit(printf("Error again 5\n"));
 			}
 		}
-		height = i;
 	}
-	map.width = map.width;
-	map.height = height;
 
 	if (!map.x)
 		exit(puts("No Player in your map"));
 
-	for(int i = 0; i < number_of_lines - 6; i++)
+	for(int i = 0; i < map.height; i++)
 	{
 		printf("|%s|\n", map.map[i]);
 	}
-
 	puts("\n--------- Map ---------");
 	printf("C. %u, F. %u\n", map.c.value, map.f.value);
 	printf("NO : %s\n", map.no);
@@ -413,5 +397,10 @@ int main(int ac, char **av)
 	printf("HEIGHT	: %d\n", map.height);
 	puts("\n--------- WIDTH ---------");
 	printf("WIDTH	: %d\n", map.width);
+	// free(map.no);
+	// free(map.so);
+	// free(map.we);
+	// free(map.ea);
+	// while (1);
 	return (0);
 }

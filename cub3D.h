@@ -6,7 +6,7 @@
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:03:30 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/11 17:06:37 by sakarkal         ###   ########.fr       */
+/*   Updated: 2024/01/11 20:24:48 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int		check_line_is_empty(char *line);
 
 ////////////////////////    UTILS     ///////////////////////////
 
-char	*ft_strdup(char *s1);
 char	*ft_strchr(const char *s, int c);
 char	*ft_substr(char const *s, unsigned int start, int len);
 char	**ft_split(char *str, char c);
@@ -64,4 +63,10 @@ char	*ft_substr(char const *s, unsigned int start, int len);
 int		ft_strlcpy(char *dst, const char *src, int dstsize);
 char	*ft_strtok(char *str, char *sep);
 
+
+
+
+void	*check_isfree(char **str);
 #endif
+
+

@@ -3,11 +3,9 @@
 char	*read_and_store(int fd, char *save)
 {
 	char	*buff;
-	char	*temp;
 	int		read_bytes;
 
 	read_bytes = 1;
-	temp = NULL;
 	while (!ft_search(save, '\n') && read_bytes != 0)
 	{
 		buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -20,10 +18,7 @@ char	*read_and_store(int fd, char *save)
 			return (NULL);
 		}
 		buff[read_bytes] = '\0';
-		temp = save;
-		save = ft_strjoin(temp, buff);
-		free(buff);
-		free(temp);
+		save = ft_strjoin(save, buff);
 	}
 	return (save);
 }
@@ -78,7 +73,6 @@ char	*the_saver(char *save)
 	while (save[i])
 		str[c++] = save[i++];
 	str[c] = '\0';
-	
 	free(save);
 	return (str);
 }

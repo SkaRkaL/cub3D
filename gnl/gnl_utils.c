@@ -1,6 +1,6 @@
 #include "gnl.h"
 
-int	ft_strlen(const char *s)
+int	ft_strlen(char *s)
 {
 	int	i;
 
@@ -10,15 +10,15 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(char *s)
+char	*ft_strdup(const char *s)
 {
 	int		i;
-	int		y;
+	int	y;
 	char	*ptr;
 
 	i = 0;
-	y = ft_strlen(s);
-	ptr = malloc(y + 1 * sizeof(char));
+	y = ft_strlen((char *)s);
+	ptr = malloc(y * sizeof(char));
 	if (!ptr)
 		return (NULL);
 	while (s[i])
@@ -33,7 +33,7 @@ char	*ft_strdup(char *s)
 char	*ft_strjoin(char *save, char *buff)
 {
 	char	*str;
-	int		total;
+	int	total;
 	int		i;
 	int		j;
 
@@ -52,6 +52,8 @@ char	*ft_strjoin(char *save, char *buff)
 	while (buff[++j] != '\0')
 		str[i + j] = buff[j];
 	str[i + j] = '\0';
+	free(save);
+	free(buff);
 	return (str);
 }
 
