@@ -6,3 +6,5 @@ Ds_Store
 cub3D
 test
 test.c
+.vscode
+.vscode/*
