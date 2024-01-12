@@ -6,7 +6,7 @@
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 02:23:39 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/12 02:37:04 by sakarkal         ###   ########.fr       */
+/*   Updated: 2024/01/12 20:30:38 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	check_textures_colors(char *trimmed_line, short *flag, t_map *map)
 	var.i = -1;
 	while (++var.i < 6)
 	{
-		if (!ft_strncmp(var.dir, kk[var.i], ft_strlen(kk[var.i])))
+		if (!ft_strncmp(var.dir, kk[var.i], ft_strlen(var.dir)))
 		{
 			if (*flag & kk_flag[var.i])
 				exit_err("Error\nDuplicate key");
