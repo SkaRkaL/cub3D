@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gnl_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/12 02:24:32 by sakarkal          #+#    #+#             */
+/*   Updated: 2024/01/12 02:25:43 by sakarkal         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "gnl.h"
 
-int	ft_strlen(char *s)
+int	ft_strlen(const char *s)
 {
 	int	i;
 
@@ -13,7 +25,7 @@ int	ft_strlen(char *s)
 char	*ft_strdup(const char *s)
 {
 	int		i;
-	int	y;
+	int		y;
 	char	*ptr;
 
 	i = 0;
@@ -33,7 +45,7 @@ char	*ft_strdup(const char *s)
 char	*ft_strjoin(char *save, char *buff)
 {
 	char	*str;
-	int	total;
+	int		total;
 	int		i;
 	int		j;
 
