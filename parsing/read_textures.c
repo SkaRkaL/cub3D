@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_textures.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asettar <asettar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 02:23:27 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/15 18:51:03 by asettar          ###   ########.fr       */
+/*   Updated: 2024/01/15 20:38:30 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	check_textures_colors(char *trimmed_line, short *flag, t_map *map)
 	free(var.dir);
 }
 
-void	check_duplicates(short flag, short full_flag, t_map *map)
+void	check_missing_key(short flag, short full_flag, t_map *map)
 {
 	static char		*kk[6] = {"NO", "SO", "WE", "EA", "C", "F"};
 	static short	kk_flag[6] = {1, 2, 4, 8, 16, 32};
@@ -126,5 +126,5 @@ void	read_textures(t_map *map)
 		free(trimmed_line);
 		free(line);
 	}
-	check_duplicates(flag, full_flag, map);
+	check_missing_key(flag, full_flag, map);
 }
