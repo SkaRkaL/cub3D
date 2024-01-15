@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gnl_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asettar <asettar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 02:24:32 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/12 02:25:43 by sakarkal         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:29:26 by asettar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ char	*ft_strdup(const char *s)
 	char	*ptr;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	y = ft_strlen((char *)s);
-	ptr = malloc(y * sizeof(char));
+	ptr = malloc((y + 1) * sizeof(char));
 	if (!ptr)
 		return (NULL);
 	while (s[i])

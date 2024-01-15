@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_textures.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: asettar <asettar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 02:23:27 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/15 17:20:05 by sakarkal         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:51:03 by asettar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	check_duplicates(short flag, short full_flag, t_map *map)
 	}
 }
 
-void	read_textures(int fd, t_map *map)
+void	read_textures(t_map *map)
 {
 	short	flag;
 	short	full_flag;
@@ -112,7 +112,7 @@ void	read_textures(int fd, t_map *map)
 	full_flag = 1 | 2 | 4 | 8 | 16 | 32;
 	while (flag != full_flag)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(map->fd);
 		if (line == NULL)
 			break ;
 		trimmed_line = ft_strtrim(line, "\n \t");

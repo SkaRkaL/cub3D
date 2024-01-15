@@ -1,11 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asettar <asettar@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/15 18:53:18 by asettar           #+#    #+#             */
+/*   Updated: 2024/01/15 20:18:13 by asettar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3D.h"
 
 void	exit_err(char *str, t_map *map)
 {
 	int	i;
-	
+
 	ft_putstr_fd(str, 2);
-	if (!map) exit(1) ;
+	if (map)
+		close(map->fd);
+	if (!map)
+		exit(1);
 	if (map->no)
 		free(map->no);
 	if (map->so)
@@ -33,56 +48,31 @@ void	check_args(int ac, char **av)
 		exit_err("Error\nInvalid file", NULL);
 }
 
-void	read_file_content(int fd, t_map *map)
+void	read_file_content(t_map *map)
 {
-	read_textures(fd, map);
-	read_map(fd, map);
+	read_textures(map);
+	read_map(map);
 }
-void leaks(){
-	system("leaks cub3D");
-}
+
+// void	leaks(void)
+// {
+// 	char	s[1000];
+// 	sprintf(s, "%d", getpid());
+// 	system(ft_strjoin(strdup("lsof -p "), strdup(s)));
+// 	system("leaks cub3D");
+// }
 
 int	main(int ac, char **av)
 {
-	int		fd;
 	t_map	map;
 
-	atexit(leaks);
 	check_args(ac, av);
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-		return (ft_putstr_fd("Error\nFile not found", 2), 1);
 	ft_memset(&map, 0, sizeof(t_map));
-	read_file_content(fd, &map);
+	map.fd = open(av[1], O_RDONLY);
+	if (map.fd == -1)
+		return (ft_putstr_fd("Error\nFile not found", 2), 1);
+	read_file_content(&map);
+	close(map.fd);
 	graphic_handle(&map);
-	// i = 0;
-	// while (i < map.height)
-	// {
-	// 	printf("|%s|\n", map.map[i++]);
-	// }
-	// puts("\n--------- Map ---------");
-	// printf("C. %u, F. %u\n", map.c.value, map.f.value);
-	// printf("NO : %s\n", map.no);
-	// printf("SO : %s\n", map.so);
-	// printf("WE : %s\n", map.we);
-	// printf("EA : %s\n", map.ea);
-	// puts("\n--------- Floor ---------");
-	// printf("COLOR ======>	: %#x\n", map.f.value);
-	// printf("COLOR => Red	: %d\n", map.f.r);
-	// printf("COLOR => Green	: %d\n", map.f.g);
-	// printf("COLOR => Blue	: %d\n", map.f.b);
-	// printf("COLOR => Alpha	: %d\n", map.f.a);
-	// puts("\n--------- Ceiling ---------");
-	// printf("COLOR ======>	: %#x\n", map.c.value);
-	// printf("COLOR => Red	: %d\n", map.c.r);
-	// printf("COLOR => Green	: %d\n", map.c.g);
-	// printf("COLOR => Blue	: %d\n", map.c.b);
-	// printf("COLOR => Alpha	: %d\n", map.c.a);
-	// puts("\n--------- HEIGHT ---------");
-	// printf("HEIGHT	: %d\n", map.height);
-	// puts("\n--------- WIDTH ---------");
-	// printf("WIDTH	: %d\n", map.width);
-	// printf("orient	: %c\n", map.orientation);
-	close(fd);
 	return (0);
 }

@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player_mouvements.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asettar <asettar@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/15 18:43:17 by asettar           #+#    #+#             */
+/*   Updated: 2024/01/15 18:44:09 by asettar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3D.h"
 
 void	chek_wall_collision(t_game *game, double newy, double newx)
 {
 	if (game->map[(int)(newy / TILE)][(int)(newx / TILE)] != '1' &&
-		game->map[(int)((newy + 3.0) / TILE)][(int)((newx) / TILE)] != '1' &&
-		game->map[(int)((newy - 3.0) / TILE)][(int)((newx) / TILE)] != '1' &&
-		game->map[(int)((newy) / TILE)][(int)((newx - 3.0) / TILE)] != '1' &&
-		game->map[(int)((newy) / TILE)][(int)((newx + 3.0) / TILE)] != '1')
-		{
-			game->ply.x = newx;
-			game->ply.y = newy;
-		}
+		game->map[(int)((newy + 5.0) / TILE)][(int)((newx) / TILE)] != '1' &&
+		game->map[(int)((newy - 5.0) / TILE)][(int)((newx) / TILE)] != '1' &&
+		game->map[(int)((newy) / TILE)][(int)((newx - 5.0) / TILE)] != '1' &&
+		game->map[(int)((newy) / TILE)][(int)((newx + 5.0) / TILE)] != '1')
+	{
+		game->ply.x = newx;
+		game->ply.y = newy;
+	}
 }
 
 void	my_close_callback(void *param)

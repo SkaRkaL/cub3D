@@ -1,18 +1,18 @@
 CC		 =  cc
-CFLAGS	 =  -Wall -Werror -Wextra -O3 -ffast-math 
+CFLAGS	 =  -Wall -Werror -Wextra
 NAME	 =  cub3D
-MLX      =  MLX/libmlx42.a
+MLX      =  /Users/${USER}/Desktop/MLX/libmlx42.a
 MLXFLAGS =  -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 INCLUDE  =  -I/Users/${USER}/homebrew/Cellar/glfw/3.3.9/include/GLFW
 LIB      =  -L/Users/${USER}/homebrew/Cellar/glfw/3.3.9/lib
 
 
 SRCS	= main.c \
-		graphic/draw_files.c \
 		graphic/player_mouvements.c \
 		graphic/casting.c \
 		graphic/graphic_handle.c \
 		graphic/textures.c \
+		graphic/casting_utils.c \
 		gnl/gnl_utils.c \
 		gnl/gnl.c \
 		libft/ft_atoi.c \

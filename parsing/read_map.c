@@ -6,7 +6,7 @@
 /*   By: asettar <asettar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 02:23:29 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/12 20:23:45 by asettar          ###   ########.fr       */
+/*   Updated: 2024/01/15 20:22:03 by asettar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	fill_map(t_map *map)
 	}
 }
 
-void	read_map(int fd, t_map *map)
+void	read_map(t_map *map)
 {
 	char	*line;
 	char	*tmp;
@@ -89,7 +89,7 @@ void	read_map(int fd, t_map *map)
 	tmp = ft_strdup("");
 	while (true)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(map->fd);
 		if (line == NULL)
 			break ;
 		if (empty_line(line, map, &is_map))
