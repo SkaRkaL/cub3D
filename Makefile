@@ -1,7 +1,7 @@
 CC		 =  cc
 CFLAGS	 =  -Wall -Werror -Wextra
 NAME	 =  cub3D
-MLX      =  /Users/${USER}/Desktop/MLX/libmlx42.a
+MLX      =  MLX/libmlx42.a
 MLXFLAGS =  -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 INCLUDE  =  -I/Users/${USER}/homebrew/Cellar/glfw/3.3.9/include/GLFW
 LIB      =  -L/Users/${USER}/homebrew/Cellar/glfw/3.3.9/lib
