@@ -6,7 +6,7 @@
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:03:30 by sakarkal          #+#    #+#             */
-/*   Updated: 2024/01/15 20:48:09 by sakarkal         ###   ########.fr       */
+/*   Updated: 2024/01/16 13:52:34 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include "gnl/gnl.h"
 # include <limits.h>
 # include <math.h>
-# include "/Users/asettar/Desktop/MLX/MLX42.h"
+# include "MLX/MLX42.h"
 
 # define WIDTH 1200
 # define HEIGHT 900
